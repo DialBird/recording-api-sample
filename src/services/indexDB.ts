@@ -39,7 +39,7 @@ class CustomDexie extends Dexie {
 
 const db = new CustomDexie()
 
-class RecordingFragment {
+class RecordingFragmentDB {
   static create(recordingId: string, blob: Blob) {
     return db
       .transaction('rw', db.recordingFragments, () => {
@@ -89,7 +89,7 @@ class RecordingFragment {
   }
 }
 
-export class Recording {
+export class RecordingDB {
   static getList() {
     return db.recordings.orderBy('finishAt').reverse().toArray()
   }
@@ -111,9 +111,10 @@ export class Recording {
   static update(id: string, blob: Blob) {
     return db
       .transaction('rw', db.recordingFragments, db.recordings, async () => {
-        await RecordingFragment.create(id, blob)
+        await RecordingFragmentDB.create(id, blob)
 
-        const blobSize = (await RecordingFragment.getBlobFromFragments(id)).size
+        const blobSize = (await RecordingFragmentDB.getBlobFromFragments(id))
+          .size
 
         db.recordings
           .update(id, {
@@ -151,7 +152,7 @@ export class Recording {
             new Date().getTime() - 1000 * 60 * 60 * 24 * expireDateSpan,
           )
           .each((recording) => {
-            RecordingFragment.deleteFragments(recording.id)
+            RecordingFragmentDB.deleteFragments(recording.id)
           })
 
         await db.recordings
@@ -190,7 +191,7 @@ export class Recording {
           'YYYYMMDDhhmm',
         )}_sample.webm`
 
-        const blob = await RecordingFragment.getSeekableBlobFromFragments(
+        const blob = await RecordingFragmentDB.getSeekableBlobFromFragments(
           recording.id,
         )
         const objectURL = window.URL.createObjectURL(blob)

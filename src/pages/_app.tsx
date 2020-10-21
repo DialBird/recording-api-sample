@@ -3,12 +3,12 @@ import { AppProps } from 'next/app'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import { Recording } from 'src/services/indexDB'
+import { RecordingDB } from 'src/services/indexDB'
 import 'src/styles/globals.css'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    Recording.deleteExpiredData()
+    RecordingDB.deleteExpiredData()
   }, [])
 
   return <Component {...pageProps} />
