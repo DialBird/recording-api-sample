@@ -1,12 +1,17 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import { v4 as uuidv4 } from 'uuid'
 
-import { RecordingDB } from 'src/services/indexDB'
+import { IRecording, RecordingDB } from 'src/services/indexDB'
 
 const RecordingRaw = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [mediaRecorder, setMediaRecorder] = useState<any>()
+  const [recordings, setRecordings] = useState<IRecording[]>([])
+
+  useEffect(() => {
+    RecordingDB.getList().then((list) => setRecordings(list))
+  }, [])
 
   const inactivateStream = (stream: MediaStream) => {
     if (!stream.active) return
@@ -18,7 +23,7 @@ const RecordingRaw = () => {
     if (!navigator.mediaDevices) return null
 
     return navigator.mediaDevices
-      .getDisplayMedia({ audio: true, video: true })
+      .getUserMedia({ audio: true, video: true })
       .then((stream) => stream)
       .catch((err) => {
         if (err.name !== 'AbortError' && err.name !== 'NotAllowedError') {
@@ -97,6 +102,10 @@ const RecordingRaw = () => {
     console.log('Stop recording')
   }
 
+  const downloadRecording = (id: string) => {
+    RecordingDB.downloadData(id)
+  }
+
   return (
     <div className="container">
       <h1>Recording Sample</h1>
@@ -109,6 +118,18 @@ const RecordingRaw = () => {
           Record Start
         </Button>
       )}
+      <ul>
+        {recordings.map((recording) => (
+          <li key={recording.id}>
+            <Button
+              onClick={() => downloadRecording(recording.id)}
+              variant="primary"
+            >
+              Download {recording.id}
+            </Button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
