@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import styles from 'src/styles/Home.module.css'
 
-const Home = (): JSX.Element => {
+const Home = () => {
   return (
     <div className={styles.container}>
       <Head>
