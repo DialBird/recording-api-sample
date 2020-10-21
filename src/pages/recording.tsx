@@ -1,7 +1,3 @@
-import React, { memo } from 'react'
+import { Recording } from 'src/components/Recording'
 
-const Recording = () => {
-  return <div>Recording</div>
-}
-
-export default memo(Recording)
+export default Recording
