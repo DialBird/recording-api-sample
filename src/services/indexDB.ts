@@ -26,7 +26,7 @@ class CustomDexie extends Dexie {
   recordings: Dexie.Table<IRecording, string>
 
   constructor() {
-    super('remotehour')
+    super('recording_sample')
 
     this.version(1).stores({
       recordingFragments: '++id, recordingId',
