@@ -13,6 +13,8 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
-  "rules": {}
+  "plugins": ["react"],
+  "rules": {
+    "no-unused-vars": "warn"
+  }
 }
